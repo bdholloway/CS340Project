@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/styles/Login.css"/>
+</head>
+
+    <body>
+
+        <div class="signup-form">
+          <form action="/examples/actions/confirmation.php" method="post">
+              <h2>Login</h2>
+              <div class="form-group">
+                  <input type="name" class="form-control" name="name" placeholder="Username" required="required">
+              </div>
+              <div class="form-group">
+                  <input type="password" class="form-control" name="password" placeholder="Password" required="required">
+              </div>   
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Trainer</label>
+              </div>    
+              <div class="form-group">
+                  <a href="/Home"></a><button type="submit" class="btn btn-success btn-lg btn-block">Login</button></a> {{!-- Remove the link to the home page when its time to make it functional. This is for display purpose only --}}
+              </div>
+              <div class="text-center">Forget Password? <a href="/Register">Register?</a></div>
+          </form>
+      </div>
+    </body>
+
+</html>

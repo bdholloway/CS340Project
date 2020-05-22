@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap Data Table with Filter Row Feature</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/AddWorkTrainer.css">
+</head>
+<body>
+
+    <div class="topnav">
+        <a href="/Home">Home</a>
+        <a class="active" href="/Addsession">Add Session</a>
+        <a href="/AddWorkout">Add Workout</a>
+    </div>
+
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-6"><h2>Hodges, Ted</h2></div>
+                
+            </div>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Trainer</th>
+                    <th>Workout</th>
+                    <th>Description</th>
+                    <th>Difficulty</th>
+                    <th>Date&Time</th>
+                    <th>Duration(Min)</th>
+                    <th>Availablities</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Ted Hodges</td>
+                    <td>Legs<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px;">&#xE254;</i></a></td>
+                    <td>Free Weights<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px;">&#xE254;</i></a></td>
+                    <td>Expert<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px;">&#xE254;</i></a></td>
+                    <td>06/21/20 15:30<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px;">&#xE254;</i></a></td>
+                    <td>55<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px;">&#xE254;</i></a></td>
+                    <td>4<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px;">&#xE254;</i></a></td>
+                    <td>
+                        <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px; color:red">&#xE872;</i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ted Hodges</td>
+                    <td>Upper Body<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px;">&#xE254;</i></a></td>
+                    <td>Back/Chest/Shoulders<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px;">&#xE254;</i></a></td>
+                    <td>Intermediate<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px;">&#xE254;</i></a></td>
+                    <td>06/23/20 12:30<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px;">&#xE254;</i></a></td>
+                    <td>60<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px;">&#xE254;</i></a></td>
+                    <td>8<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px;">&#xE254;</i></a></td>
+                    <td>
+                        <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons" style="font-size: 15px; color: red;">&#xE872;</i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="btn-group2" data-toggle="buttons">
+                        <label class="btn btn-success">
+                            <input type="radio" name="status" value="active"> Add Session
+                        </label>							
+                    </div>
+                </div>
+            </div>
+    </div>     
+</body>
+</html> 
