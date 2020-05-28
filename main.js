@@ -19,7 +19,8 @@ app.set('view engine', 'handlebars');
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('mysql', mysql);
 
-app.get('/', (req, res) => {
+app.get('/', function(req, res){
+  console.log('Inside login page');
   res.render('Login');
 });
 
@@ -27,8 +28,15 @@ app.get('/Register', (req, res) => {
   res.render('Register');
 });
 
-app.get('/Home', (req, res) => {
-  res.render('Home');
+//Route to users profile. 
+app.get('/Home', function(req, res){
+  var sessionQuery = 'SELECT * FROM WorkoutSession';
+  mysql.pool.query(sessionQuery, function(error, results, fields){
+    console.log(results);
+  res.render('Home', {
+    results: results
+  });
+});
 });
 
 app.get('/AddWorkout', (req, res) => {
@@ -44,7 +52,13 @@ app.get('/index', (req, res) => {
 });
 
 app.get('/AddSession', (req, res) => {
-  res.render('AddSession');
+  var sessQuery = 'SELECT * FROM WorkoutSession';
+  mysql.pool.query(sessQuery, function(error, results, fields){
+    console.log(results);
+  res.render('AddSession', {
+    results: results
+  });
+});
 });
 
 
@@ -61,7 +75,7 @@ app.use(function(err, req, res, next){
   res.render('500');
 });
 
-app.set('port', 64812);
+app.set('port', 64813);
 app.listen(app.get('port'), function(){
   console.log('Express started on http://flipX.engr.oregonstate.edu:' + app.get('port') + '; press Ctrl-C to terminate.');
 });
