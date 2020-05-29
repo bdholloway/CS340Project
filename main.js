@@ -54,7 +54,7 @@ app.get('/index', (req, res) => {
 app.get('/AddSession', (req, res) => {
   var sessQuery = 'SELECT * FROM WorkoutSession';
   mysql.pool.query(sessQuery, function(error, results, fields){
-    console.log(results);
+    //console.log(results);
   res.render('AddSession', {
     results: results
   });
