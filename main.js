@@ -199,10 +199,6 @@ app.get('/AddSession', (req, res) => {
       });
     });
   });
-
-  
-
-  
 });
 
 app.post('/addNewSession', function(req, res){

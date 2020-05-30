@@ -20,10 +20,5 @@ document.getElementById("newSessBtn").addEventListener("click", function(){
     
     alert("Inserted new session")
 
-    document.getElementById("sessDate").value="";
-    document.getElementById("sessTime").value="";
-    document.getElementById("numOfParticipants").value="";
-    document.getElementById("duration").value="";
-    document.getElementById("tid").value="";
-    document.getElementById("pName").value="";
+    window.location.reload();
 });
