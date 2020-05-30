@@ -13,7 +13,7 @@ var app = express();
 var handlebars = require('express-handlebars');
 
 app.engine('handlebars', handlebars({defaultLayout: 'main'}));
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.text());
 
 app.set('view engine', 'handlebars');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -51,18 +51,48 @@ app.get('/index', (req, res) => {
   res.render('Index');
 });
 
+//add session------------------------------------------------------
+
 app.get('/AddSession', (req, res) => {
   var sessQuery = 'SELECT * FROM WorkoutSession';
   mysql.pool.query(sessQuery, function(error, results, fields){
-    //console.log(results);
-  res.render('AddSession', {
-    results: results
+    var sessRes = results
+
+    sessQuery = 'SELECT `planName` FROM workoutPlan';
+    mysql.pool.query(sessQuery, function(error, results, fields){
+      console.log(error)
+      var planRes = results
+
+      console.log("sessRes")
+      console.log(sessRes);
+
+      console.log("planRes")
+      console.log(planRes);
+
+      res.render('AddSession', {
+        sessRes: sessRes, 
+        planRes: planRes
+      });
+    });
   });
+
+  
+
+  
 });
+
+app.post('/addNewSession', function(req, res){
+
+  var sessQuery = req.body;
+
+  console.log("Body is: " + sessQuery);
+
+  mysql.pool.query(sessQuery, function(error, results, fields){
+    console.log(error);
+    console.log("inserted workout session");
+  });
+  
 });
-
-
-
 
 app.use(function(req,res){
   res.status(404);
@@ -75,7 +105,7 @@ app.use(function(err, req, res, next){
   res.render('500');
 });
 
-app.set('port', 64813);
+app.set('port', 64815);
 app.listen(app.get('port'), function(){
   console.log('Express started on http://flipX.engr.oregonstate.edu:' + app.get('port') + '; press Ctrl-C to terminate.');
 });
