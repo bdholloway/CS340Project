@@ -42,7 +42,7 @@ app.post("/login", (req, res, next) => {
 							//console.log(req.session.username);
 							//console.log(req.session.memberID);
 							req.session.save();
-							res.render("Register");
+							res.redirect("Rate");
 						} else {
 							console.log("Passwords don't match");
 						}
@@ -105,6 +105,40 @@ app.post("/register", (req, res, next) => {
 
 app.get("/register", (req, res) => {
 	res.render("Register");
+});
+
+app.get("/rate", (req, res) => {
+var trainer;
+mysql.pool.query("SELECT trainerID, firstName, lastName, rating FROM Trainer;", function (error, trainer, fields) {
+	if (error) {
+		res.write(JSON.stringify(error));
+		res.end();
+	}
+  
+  res.render('Rate', {
+    trainer: trainer
+  });
+});
+
+});
+
+app.post("/rate", (req, res) => {
+  console.log(req.session.memberID);
+  console.log(req.body.trainerID);
+  console.log(req.body.score);
+	var trainer;
+	mysql.pool.query(
+		"INSERT INTO Rates (memberID, trainerID, rating) VALUES (?, ?, ?);",
+		[req.session.memberID, req.body.trainerID, req.body.score],
+		function (error, rating, fields) {
+			if (error) {
+				res.write(JSON.stringify(error));
+				res.end();
+			}
+
+			res.redirect("Rate");
+		}
+	);
 });
 
 app.use(function (req, res) {

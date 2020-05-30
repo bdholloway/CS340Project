@@ -1,33 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bootstrap Data Table with Filter Row Feature</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" href="/styles/Rate.css"/>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap Data Table with Filter Row Feature</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/Rate.css" />
 </head>
+
 <body>
 
     <div class="topnav">
         <a href="/Home">Home</a>
         <a href="/AddWorkout">Add Workout</a>
         <a class="active" href="/Rate">Rate</a>
-      </div>
+    </div>
 
     <div class="table-wrapper">
         <div class="table-title">
             <div class="row">
-                <div class="col-sm-6"><h2>Training Rating</h2></div>
+                <div class="col-sm-6">
+                    <h2>Training Rating</h2>
+                </div>
                 <div class="col-sm-6">
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-success">
                             <input type="radio" name="status" value="active"> Update
-                        </label>							
+                        </label>
                     </div>
                 </div>
             </div>
@@ -41,60 +45,36 @@
                 </tr>
             </thead>
             <tbody>
+                {{#each trainer}}
                 <tr>
-                    <td>Ted Hodges</td>
-                    <td>8</td>
-                    <td><select id="rating">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="4">5</option>
-                        <option value="4">6</option>
-                        <option value="4">7</option>
-                        <option value="4">8</option>
-                        <option value="4">9</option>
-                        <option value="4">10</option>
-                      </select></td>
+                    <td>{{firstName}} {{lastName}}</td>
+                    <td>{{rating}}</td>
+                    <td><select class="form-control" id="rateform" name="score" form="form{{trainerID}}">
+                            <option value=1>1</option>
+                            <option value=2>2</option>
+                            <option value=3>3</option>
+                            <option value=4>4</option>
+                            <option value=5>5</option>
+                            <option value=6>6</option>
+                            <option value=7>7</option>
+                            <option value=8>8</option>
+                            <option value=9>9</option>
+                            <option value=10>10</option>
+
+                        </select>
+                    </td>
+                    <td style="display:none"><input type="hidden" id="trainerID" name="trainerID" value={{trainerID}} form="form{{trainerID}}">
+                    </td>
+                    <td>
+                        <form id="form{{trainerID}}" method="post" action="/rate">
+                            <input type="submit" name="submit1" value="submit" />
+                        </form>
+
                 </tr>
-                
-                <tr>
-                    <td>Steven Boggs</td>
-                    <td>6</td>
-                    <td><select id="rating">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="4">5</option>
-                        <option value="4">6</option>
-                        <option value="4">7</option>
-                        <option value="4">8</option>
-                        <option value="4">9</option>
-                        <option value="4">10</option>
-                      </select></td>
-                    
-                </tr>
-                
-                <tr data-status="inactive">
-                    <td>Chet Williams</td>
-                    <td>7</td>
-                    <td><select id="rating">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="4">5</option>
-                        <option value="4">6</option>
-                        <option value="4">7</option>
-                        <option value="4">8</option>
-                        <option value="4">9</option>
-                        <option value="4">10</option>
-                      </select></td>
-                    
-                </tr>
+                {{/each}}
             </tbody>
         </table>
-    </div>     
+    </div>
 </body>
-</html> 
+
+</html>
