@@ -15,5 +15,6 @@
     "express-session": "^1.11.3",
     "mysql": "^2.8.0",
     "bcrypt": "3.0.6"
+    "express-flash": "0.0.2"
   }
 }
