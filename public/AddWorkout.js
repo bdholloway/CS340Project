@@ -1,12 +1,59 @@
-// console.log("addsessionJS Loaded")
+console.log("addsessionJS Loaded");
 
-Handlebars.registerHelper('ifEquals', function (arg1, arg2, options) {
-    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
-});
+document.addEventListener("DOMContentLoaded", function(){
+    document.getElementById("delete-all-btn").addEventListener("click", function () {
+        console.log("Delete Everything");
+        var deleteRequest = new XMLHttpRequest();
+        var requestURL = "/deleteWorkouts";
+        deleteRequest.open('DELETE', requestURL);
+        deleteRequest.setRequestHeader('Content-Type', 'text/plain');
+        deleteRequest.send();
 
-Handlebars.registerHelper('ifnoteq', function (a, b, options) {
-    if (a != b) { return options.fn(this); }
-    return options.inverse(this);
+        deleteRequest.addEventListener('load', function (event) {
+            if (event.target.status === 200) {
+                console.log("Success");
+                location.reload();
+            } else {
+                console.log(event.target.status);
+                alert("Error deleting Sessions: " + event.target.response);
+            }
+        });
+    });
+
+    document.getElementById("add-sessions-btn").addEventListener("click", function () {
+        console.log("Add Sessions");
+        var sessionIDs = document.getElementsByClassName("form-check-input");
+        var i;
+        var sessQuery = []; 
+        for(i=0; i < sessionIDs.length; i++){
+            if(sessionIDs[i].checked){
+                sessQuery.push(sessionIDs[i].id);
+            }
+        }
+        console.log(sessQuery);
+        if(sessQuery.length > 0) {
+            console.log("Sending a post request!");
+            var postRequest = new XMLHttpRequest();
+            var requestURL = "/addNewWorkout";
+            postRequest.open('POST', requestURL);
+            var requestBody = JSON.stringify({ array: sessQuery });
+            console.log(requestBody);
+            postRequest.addEventListener('load', function (event) {
+                if (event.target.status === 200) {
+                    console.log("Success");
+                    location.reload();
+                } else {
+                    console.log(event.target.status);
+                    alert("Error adding Sessions: " + event.target.response);
+                }
+            });
+            postRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            postRequest.send(requestBody);
+        } else {
+            console.log("There are no checkboxes checked");
+        }
+
+    });
 });
 // document.getElementById("newSessBtn").addEventListener("click", function(){
 //     var sessDate = document.getElementById("sessDate").value;
@@ -30,6 +77,8 @@ Handlebars.registerHelper('ifnoteq', function (a, b, options) {
 
 //     window.location.reload();
 // });
+
+
 
 // document.getElementById("upSessBtn").addEventListener("click", function(){
 //     var sessID = document.getElementById("sessionID").value;

@@ -145,15 +145,7 @@
        }
      );
    });
-   
-
-app.engine('handlebars', handlebars({defaultLayout: 'main'}));
-app.use(bodyParser.text());
-
-app.set('view engine', 'handlebars');
-app.use(express.static(path.join(__dirname, 'public')));
-app.set('mysql', mysql);
-
+app.use(bodyParser.json());
 
 //Route to users profile. 
 app.get('/Home', function(req, res){
@@ -172,15 +164,32 @@ app.get('/AddWorkout', (req, res) => {
   } else if (req.session.userType != "Member") {
     res.redirect("/AddSession");
   } else {
-    var sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID JOIN \
-      workoutPlan ON WorkoutSession.pName = workoutPlan.planName';
-    mysql.pool.query(sql, function (err, rows, fields) {
+    var sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+    JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
+    WHERE WorkoutSession.sessionId NOT IN (SELECT sessionID FROM Takes WHERE memberID=?);';
+    mysql.pool.query(sql, [req.session.memberID], function (err, rows, fields) {
       if (err) {
         console.log(err);
         res.status(500);
         res.render('500');
       } else {
-        res.render('AddWorkout', { data: rows });
+
+        sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+        JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
+        WHERE WorkoutSession.sessionId IN (SELECT sessionID FROM Takes WHERE memberID=?);';
+        mysql.pool.query(sql, [req.session.memberID], function(err, mSessions, fields){
+          if (err){
+            console.log(err);
+            res.status(500);
+            res.render('500');
+          } else{
+            res.render('AddWorkout', { 
+              data: rows,
+              memSessions: mSessions
+             });
+          }
+        });
+
       }
     });
   }
@@ -230,7 +239,6 @@ app.get('/AddSession', (req, res) => {
 app.post('/addNewSession', function(req, res){
 
   var sessQuery = req.body;
-
   console.log("Body is: " + sessQuery);
 
   mysql.pool.query(sessQuery, function(error, results, fields){
@@ -238,6 +246,43 @@ app.post('/addNewSession', function(req, res){
     console.log("inserted workout session");
   });
   
+});
+
+app.post('/addNewWorkout', function (req, res) {
+  var sql = "INSERT INTO Takes (memberID, sessionID) VALUES ";
+  console.log(req.body);
+  var i;
+  for(var i = 0; i < req.body.array.length; i++){
+    sql += "("+req.session.memberID+", ?) ";
+    if(i < req.body.array.length-1){
+      sql+=",";
+    }
+  }
+  sql += ";";
+  console.log(sql);
+  mysql.pool.query(sql, req.body.array, function (error, results, fields) {
+    if(error){
+      console.log(error);
+      res.status(500).send("Error adding sessions");
+    } else {
+      console.log("inserted workout session");
+      res.status(200).send("Success");
+    }
+  });
+});
+
+app.delete('/deleteWorkouts', function (req, res) {
+  var sql = 'DELETE FROM Takes WHERE memberID = ?';
+  console.log("Deleting workouts for ", req.session.memberID);
+  mysql.pool.query(sql, [req.session.memberID], function (error, results, fields) {
+    if (error) {
+      console.log(error);
+      res.status(500).send("Error deleting sessions");
+    } else {
+      console.log("Successfully deleted");
+      res.status(200).send("Success");
+    }
+  });
 });
 
 app.use(function(req,res){
