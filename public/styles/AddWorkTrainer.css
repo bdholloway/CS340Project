@@ -37,7 +37,7 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 .table-wrapper {
-    width: 950px;
+    width: 1100px;
     background: #fff;
     padding: 20px 30px 5px;
     margin: 30px auto;
@@ -79,7 +79,7 @@ table.table tr th:first-child {
     width: 40px;
 }
 table.table tr th:last-child {
-    width: 100px;
+    width: 60px;
 }
 table.table-striped tbody tr:nth-of-type(odd) {
     background-color: #fcfcfc;
@@ -107,5 +107,9 @@ table.table td a.edit {
     font-size: 5px;
 }
 
+
+#tid, #tid2{
+    display: none;
+}
 
 

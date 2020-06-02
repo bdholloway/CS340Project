@@ -178,27 +178,37 @@ app.get('/index', (req, res) => {
 //add session------------------------------------------------------
 
 app.get('/AddSession', (req, res) => {
-  var sessQuery = 'SELECT * FROM WorkoutSession';
-  mysql.pool.query(sessQuery, function(error, results, fields){
-    var sessRes = results
 
-    sessQuery = 'SELECT `planName` FROM workoutPlan';
+  if (!req.session.username) {
+    res.redirect("/");
+  } else if (req.session.userType != "Trainer") {
+      res.redirect("/AddWorkout");
+  } else {
+
+    var tid = req.session.trainerID;
+    var sessQuery = 'SELECT * FROM WorkoutSession WHERE tid = ' + tid;
     mysql.pool.query(sessQuery, function(error, results, fields){
-      console.log(error)
-      var planRes = results
+      var sessRes = results
 
-      console.log("sessRes")
-      console.log(sessRes);
+      sessQuery = 'SELECT `planName` FROM workoutPlan';
+      mysql.pool.query(sessQuery, function(error, results, fields){
+        console.log(error)
+        var planRes = results
 
-      console.log("planRes")
-      console.log(planRes);
+        console.log("sessRes")
+        console.log(sessRes);
 
-      res.render('AddSession', {
-        sessRes: sessRes, 
-        planRes: planRes
+        console.log("planRes")
+        console.log(planRes);
+
+        res.render('AddSession', {
+          sessRes: sessRes, 
+          planRes: planRes,
+          tid: tid
+        });
       });
     });
-  });
+  }
 });
 
 app.post('/addNewSession', function(req, res){
@@ -225,7 +235,7 @@ app.use(function(err, req, res, next){
   res.render('500');
 });
 
-app.set('port', 64815);
+app.set('port', 64819);
 app.listen(app.get('port'), function(){
   console.log('Express started on http://flipX.engr.oregonstate.edu:' + app.get('port') + '; press Ctrl-C to terminate.');
 });

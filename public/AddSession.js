@@ -22,3 +22,27 @@ document.getElementById("newSessBtn").addEventListener("click", function(){
 
     window.location.reload();
 });
+
+document.getElementById("upSessBtn").addEventListener("click", function(){
+    var sessID = document.getElementById("sessionID").value;
+    var sessDate = document.getElementById("sessDate2").value;
+    var sessTime = document.getElementById("sessTime2").value;
+    var numOfParticipants = document.getElementById("numOfParticipants2").value;
+    var duration = document.getElementById("duration2").value;
+    var tid = document.getElementById("tid").value;
+    var pName = document.getElementById("pName2").value;
+
+    var sessQuery = "UPDATE WorkoutSession SET sessDate=" + sessDate + ", numOfParticipants='" + numOfParticipants + "', sessTime='" + sessTime + "', duration='" + duration + "', pName='" + pName + "' WHERE sessionId='" + sessID + "'"
+  
+    var postRequest = new XMLHttpRequest();
+    var requestURL = "/addNewSession";
+    postRequest.open('POST', requestURL);
+    var requestBody = sessQuery;
+    console.log(requestBody);
+    postRequest.setRequestHeader('Content-Type', 'text/plain');
+    postRequest.send(requestBody);
+    
+    alert("Updated session")
+
+    window.location.reload();
+});
