@@ -4,6 +4,7 @@
     */
 
    var express = require("express");
+   var flash = require("express-flash");
    var mysql = require("./dbcon.js");
    var bodyParser = require("body-parser");
    var path = require("path");
@@ -18,10 +19,16 @@
    app.set("view engine", "handlebars");
    app.use(express.static(path.join(__dirname, "public")));
    app.set("mysql", mysql);
+   app.use(flash());
    const saltRounds = bcrypt.genSaltSync(10);
 
    app.get("/", (req, res) => {
-     res.render("Login");
+	res.render("Login", { expressFlash: req.flash("error") });
+   });
+
+   app.get("/logout", (req, res) => {
+	req.session.destroy();
+	res.redirect("/");
    });
    
    app.post("/login", (req, res, next) => {
@@ -32,7 +39,7 @@
          [req.body.username],
          function (error, rows) {
            if (error) {
-             console.log(err);
+             console.log(error);
            } else if (rows.length) {
              bcrypt.compare(req.body.password, rows[0].hashedPassword, function (
                err,
@@ -43,17 +50,16 @@
                  req.session.username = rows[0].username;
                  req.session.memberID = rows[0].memberID;
                  req.session.userType = req.body.userType;
-                 console.log(req.session.userType);
-                 //console.log(req.session.username);
-                 //console.log(req.session.memberID);
                  req.session.save();
-                 res.redirect("Rate");
+                 res.redirect("AddWorkout");
                } else {
-                 console.log("Passwords don't match");
+                 req.flash("error", "Incorrect Login or Password");
+				 res.redirect(301, "/");
                }
              });
            } else {
-             console.log("Query didn't return any results.");
+             req.flash("error", "Incorrect Login or Password.");
+			 res.redirect(301, "/");
            }
          }
        );
@@ -63,10 +69,10 @@
          [req.body.username],
          function (error, rows) {
            if (error) {
-             console.log(err);
+             console.log(error);
            } else if (rows.length) {
              bcrypt.compare(req.body.password, rows[0].hashedPassword, function (
-               err,
+               error,
                blah
              ) {
                if (blah) {
@@ -74,21 +80,24 @@
                  req.session.username = rows[0].username;
                  req.session.trainerID = rows[0].trainerID;
                  req.session.userType = req.body.userType;
-                 console.log(req.session.userType);
-                 //console.log(req.session.username);
-                 //console.log(req.session.memberID);
                  req.session.save();
-                 res.render("Register");
+                 res.redirect("AddSession");
                } else {
-                 console.log("Passwords don't match");
+                 req.flash("error", "Incorrect Login or Password.");
+							res.redirect(301, "/");
                }
              });
            } else {
-             console.log("Query didn't return any results.");
+             req.flash("error", "Incorrect Login or Password.");
+							res.redirect(301, "/");
            }
          }
        );
      }
+   });
+
+   app.get("/register", (req, res) => {
+	res.render("Register", { expressFlash: req.flash("error") });
    });
    
    app.post("/register", (req, res, next) => {
@@ -98,8 +107,8 @@
          [req.body.username, req.body.fname, req.body.lname, hash],
          function (error, rows) {
            if (error) {
-             console.log(hash);
-             console.log(err);
+             req.flash("error", "Registration failed.  Please try again.");
+			 res.redirect(301, "/register");
            } else {
              res.render("Login");
            }
@@ -113,38 +122,57 @@
    });
    
    app.get("/rate", (req, res) => {
-   var trainer;
-   mysql.pool.query("SELECT trainerID, firstName, lastName, rating FROM Trainer;", function (error, trainer, fields) {
-     if (error) {
-       res.write(JSON.stringify(error));
-       res.end();
-     }
-     
-     res.render('Rate', {
-       trainer: trainer
-     });
-   });
-   
-   });
+	if (!req.session.username) {
+		res.redirect("/");
+	} else if (req.session.userType != "Member") {
+		res.redirect("/AddSession");
+	} else {
+		var trainer;
+		mysql.pool.query(
+			"SELECT t.trainerID, t.firstName, t.lastName, t.rating, memberID FROM Trainer AS t LEFT JOIN (SELECT memberID, trainerID FROM Rates WHERE memberID = ?) AS r ON t.trainerID = r.trainerID;",
+			[req.session.memberID],
+			function (error, trainer, fields) {
+				if (error) {
+					res.write(JSON.stringify(error));
+					res.end();
+				}
+				res.render("Rate", {
+					trainer: trainer,
+				});
+			}
+		);
+	}
+});
    
    app.post("/rate", (req, res) => {
-     console.log(req.session.memberID);
-     console.log(req.body.trainerID);
-     console.log(req.body.score);
-     var trainer;
-     mysql.pool.query(
-       "INSERT INTO Rates (memberID, trainerID, rating) VALUES (?, ?, ?);",
-       [req.session.memberID, req.body.trainerID, req.body.score],
-       function (error, rating, fields) {
-         if (error) {
-           res.write(JSON.stringify(error));
-           res.end();
-         }
-   
-         res.redirect("Rate");
-       }
-     );
-   });
+		if (req.session.memberID != req.body.memberID) {
+			mysql.pool.query(
+				"INSERT INTO Rates (memberID, trainerID, rating) VALUES (?, ?, ?);",
+				[req.session.memberID, req.body.trainerID, req.body.score],
+				function (error, rating, fields) {
+					if (error) {
+						res.write(JSON.stringify(error));
+						res.end();
+					}
+					res.redirect("Rate");
+				}
+			);
+		} else {
+			mysql.pool.query(
+				"UPDATE Rates SET rating = ? WHERE memberID = ? && trainerID = ?;",
+				[req.body.score, req.session.memberID, req.body.trainerID],
+				function (error, rating, fields) {
+					if (error) {
+						res.write(JSON.stringify(error));
+						res.end();
+					} else {
+						res.redirect("Rate");
+					}
+				}
+			);
+		}
+	});
+
 app.use(bodyParser.json());
 
 //Route to users profile. 
