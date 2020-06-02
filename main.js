@@ -238,7 +238,7 @@ app.get('/AddSession', (req, res) => {
 
 app.post('/addNewSession', function(req, res){
 
-  var sessQuery = req.body;
+  var sessQuery = req.body.sessQuery;
   console.log("Body is: " + sessQuery);
 
   mysql.pool.query(sessQuery, function(error, results, fields){

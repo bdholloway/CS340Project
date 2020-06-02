@@ -13,9 +13,9 @@ document.getElementById("newSessBtn").addEventListener("click", function(){
     var postRequest = new XMLHttpRequest();
     var requestURL = "/addNewSession";
     postRequest.open('POST', requestURL);
-    var requestBody = sessQuery;
+    var requestBody = JSON.stringify({sessQuery: sessQuery});
     console.log(requestBody);
-    postRequest.setRequestHeader('Content-Type', 'text/plain');
+    postRequest.setRequestHeader('Content-Type', 'application/json');
     postRequest.send(requestBody);
     
     alert("Inserted new session")
@@ -37,9 +37,9 @@ document.getElementById("upSessBtn").addEventListener("click", function(){
     var postRequest = new XMLHttpRequest();
     var requestURL = "/addNewSession";
     postRequest.open('POST', requestURL);
-    var requestBody = sessQuery;
+    var requestBody = JSON.stringify({sessQuery: sessQuery});
     console.log(requestBody);
-    postRequest.setRequestHeader('Content-Type', 'text/plain');
+    postRequest.setRequestHeader('Content-Type', 'application/json');
     postRequest.send(requestBody);
     
     alert("Updated session")
