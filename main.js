@@ -12,14 +12,14 @@
    var handlebars = require("express-handlebars");
    app.use(session({ secret: "super secret" }));
    app.use(express.static(path.join(__dirname, "public")));
-   app.engine("handlebars", handlebars({ defaultLayout: "main" }));
+   app.engine("handlebars", handlebars({ defaultLayout: "main"}));
    app.use(bodyParser.urlencoded({ extended: true }));
    const bcrypt = require("bcrypt");
    app.set("view engine", "handlebars");
    app.use(express.static(path.join(__dirname, "public")));
    app.set("mysql", mysql);
    const saltRounds = bcrypt.genSaltSync(10);
-   
+
    app.get("/", (req, res) => {
      res.render("Login");
    });
@@ -167,7 +167,23 @@ app.get('/Home', function(req, res){
 });
 
 app.get('/AddWorkout', (req, res) => {
-  res.render('AddWorkout');
+  if (!req.session.username) {
+    res.redirect("/");
+  } else if (req.session.userType != "Member") {
+    res.redirect("/AddSession");
+  } else {
+    var sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID JOIN \
+      workoutPlan ON WorkoutSession.pName = workoutPlan.planName';
+    mysql.pool.query(sql, function (err, rows, fields) {
+      if (err) {
+        console.log(err);
+        res.status(500);
+        res.render('500');
+      } else {
+        res.render('AddWorkout', { data: rows });
+      }
+    });
+  }
 });
 
 
