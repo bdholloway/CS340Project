@@ -83,7 +83,7 @@
                  req.session.trainerID = rows[0].trainerID;
                  req.session.userType = req.body.userType;
                  req.session.save();
-                 res.render("AddSession");
+                 res.redirect("AddSession");
                } else {
                  req.flash("error", "Incorrect Login or Password.");
 							res.redirect(301, "/");

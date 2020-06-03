@@ -26,7 +26,6 @@
             </div>
         </div>
 
-        <div class="row">
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -49,19 +48,31 @@
                         <td>{{this.pName}}<a href="#" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons" style="font-size: 10px;"></i></a></td>
                     </tr>
                     {{/each}}
-        </div>
 
+            </tbody>
+        </table>
         <br>
         <br>
         <br>
+        <br>
+        <h3>Add New Session</h3>
 
-            <div class="row">
-                <h3>Add New Session</h3>
+        <table  class="table table-striped table-hover">
+            <thead>
                 <tr>
-                    <td><label for="Date"></label><input placeholder="yyyy-mm-dd" type="text" name="date" id="sessDate" size="8"></td>
-                    <td><label for="Time"></label><input placeholder="00:00:00" type="text" name="time" id="sessTime" size="8"></td>
-                    <td><label for="Participants"></label><input placeholder="Group Size" type="text" name="participants" id="numOfParticipants" size="8"></td>
-                    <td><label for="Duration"></label><input placeholder="Duration" type="text" name="duration" id="duration" size="5"></td>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Participants</th>
+                    <th>Duration</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><label for="Date"></label><input placeholder="Date" type="date" name="date" id="sessDate" size="8"></td>
+                    <td><label for="Time"></label><input placeholder="00:00:00" type="time" name="time" id="sessTime" size="8"></td>
+                    <td><label for="Participants"></label><input placeholder="Group Size" type="number" name="participants" id="numOfParticipants" size="2"></td>
+                    <td><label for="Duration"></label><input placeholder="Duration" type="number" name="duration" id="duration" size="3"></td>
                     <td><label for="Trainer"></label><input placeholder="Trainer" type="text" name="trainer" id="tid" size="8" value={{tid}}></td>
                     <td>
                         <select id="pName" name="Plan Name">
@@ -74,7 +85,6 @@
                 
             </tbody>
         </table>
-
             <div class="row">
                 <div class="col-sm-6">
                     <div class="btn-group2" data-toggle="buttons">
@@ -84,17 +94,10 @@
                     </div>
                 </div>
             </div>
-
-        </div>
-
-
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-
-        <div class="row">
+            <br>
+            <br>
+            <br>
+            <br>
             <h3>Update Or Delete Session</h3>
             <table class="table table-striped table-hover">
                 <thead>
@@ -109,11 +112,11 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><label for="Session ID"></label><input placeholder="Session ID" type="text" name="date" id="sessionID" size="8"></td>
-                        <td><label for="Date"></label><input placeholder="yyyy-mm-dd" type="text" name="date" id="sessDate2" size="8"></td>
-                        <td><label for="Time"></label><input placeholder="00:00:00" type="text" name="time" id="sessTime2" size="8"></td>
-                        <td><label for="Participants"></label><input placeholder="Group Size" type="text" name="participants" id="numOfParticipants2" size="8"></td>
-                        <td><label for="Duration"></label><input placeholder="Duration" type="text" name="duration" id="duration2" size="5"></td>
+                        <td><label for="Session ID"></label><input placeholder="Session ID" type="number" name="date" id="sessionID" size="8"></td>
+                        <td><label for="Date"></label><input placeholder="yyyy-mm-dd" type="date" name="date" id="sessDate2" size="8"></td>
+                        <td><label for="Time"></label><input placeholder="00:00:00" type="time" name="time" id="sessTime2" size="8"></td>
+                        <td><label for="Participants"></label><input placeholder="Group Size" type="number" name="participants" id="numOfParticipants2" size="2"></td>
+                        <td><label for="Duration"></label><input placeholder="Duration" type="number" name="duration" id="duration2" size="3"></td>
                         <td><label for="Trainer"></label><input placeholder="Trainer" type="text" name="trainer" id="tid2" size="8" value={{tid}}></td>
                         <td>
                             <select id="pName2" name="Plan Name">
@@ -125,28 +128,31 @@
                     </tr>
                 </div>
 
-                <div class="row">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="btn-group2" data-toggle="buttons">
-                                <label class="btn btn-success">
-                                    <input id="upSessBtn" type="radio" name="status" value="active"> Update Session
-                                </label>							
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="btn-group2" data-toggle="buttons">
-                                <label class="btn btn-success">
-                                    <input id="delSessBtn" type="radio" name="status" value="active"> Delete Session
-                                </label>							
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </tbody>
         </table>
-    </div>     
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="btn-group2" data-toggle="buttons">
+                    <label class="btn btn-success">
+                        <input id="upSessBtn" type="radio" name="status" value="active"> Update Session
+                    </label>							
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="btn-group2" data-toggle="buttons">
+                    <label class="btn btn-success">
+                        <input id="delSessBtn" type="radio" name="status" value="active"> Delete Session
+                    </label>							
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <br>
+        <br>
+
+    </div>
 </body>
  <script type="text/javascript" src="AddSession.js"></script>
 </html> 

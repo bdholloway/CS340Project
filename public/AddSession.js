@@ -46,3 +46,22 @@ document.getElementById("upSessBtn").addEventListener("click", function(){
 
     window.location.reload();
 });
+
+
+document.getElementById("delSessBtn").addEventListener("click", function(){
+    var sessID = document.getElementById("sessionID").value;
+    
+    var sessQuery = "DELETE FROM WorkoutSession WHERE sessionId =" + sessID
+  
+    var postRequest = new XMLHttpRequest();
+    var requestURL = "/addNewSession";
+    postRequest.open('POST', requestURL);
+    var requestBody = JSON.stringify({sessQuery: sessQuery});
+    console.log(requestBody);
+    postRequest.setRequestHeader('Content-Type', 'application/json');
+    postRequest.send(requestBody);
+    
+    alert("Deleted Session number: " + sessID)
+
+    window.location.reload();
+});
