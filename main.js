@@ -78,7 +78,7 @@
                  //console.log(req.session.username);
                  //console.log(req.session.memberID);
                  req.session.save();
-                 res.render("Register");
+                 res.render("AddSession");
                } else {
                  console.log("Passwords don't match");
                }
