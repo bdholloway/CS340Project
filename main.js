@@ -15,11 +15,13 @@
    app.use(express.static(path.join(__dirname, "public")));
    app.engine("handlebars", handlebars({ defaultLayout: "main"}));
    app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
    const bcrypt = require("bcrypt");
    app.set("view engine", "handlebars");
    app.use(express.static(path.join(__dirname, "public")));
    app.set("mysql", mysql);
    app.use(flash());
+
    const saltRounds = bcrypt.genSaltSync(10);
 
    app.get("/", (req, res) => {
@@ -173,7 +175,7 @@
 		}
 	});
 
-app.use(bodyParser.json());
+
 
 //Route to users profile. 
 app.get('/Home', function(req, res){
@@ -211,10 +213,96 @@ app.get('/AddWorkout', (req, res) => {
             res.status(500);
             res.render('500');
           } else{
+            var difficulty = ["Beginner", "Advanced", "Expert"];
+            console.log(mSessions.length);
+            for(var i = 0; i < mSessions.length; i++){
+              mSessions[i].difficulty = difficulty[mSessions[i].difficulty-1];
+            }
+            for (var i = 0; i < rows.length; i++) {
+              rows[i].difficulty = difficulty[rows[i].difficulty - 1];
+            }
             res.render('AddWorkout', { 
               data: rows,
               memSessions: mSessions
              });
+          }
+        });
+
+      }
+    });
+  }
+});
+
+app.get('/search/', (req, res) => {
+  if (!req.session.username) {
+    res.redirect("/");
+  } else if (req.session.userType != "Member") {
+    res.redirect("/AddSession");
+  } else {
+    console.log(req.params.name);
+    var sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+    JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
+    WHERE (firstName LIKE \'%%\' OR lastName LIKE \'%%\') AND WorkoutSession.sessionId NOT IN (SELECT sessionID FROM Takes WHERE memberID=?);';
+    mysql.pool.query(sql, [req.session.memberID], function (err, rows, fields) {
+      if (err) {
+        console.log(err);
+        res.status(500);
+        res.render('500');
+      } else {
+
+        sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+        JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
+        WHERE (firstName LIKE \'%%\' OR lastName LIKE \'%%\') AND WorkoutSession.sessionId IN (SELECT sessionID FROM Takes WHERE memberID=?);';
+        mysql.pool.query(sql, [req.session.memberID], function (err, mSessions, fields) {
+          if (err) {
+            console.log(err);
+            res.status(500);
+            res.render('500');
+          } else {
+            res.status(200);
+            res.send(JSON.stringify({
+              data: rows,
+              memSessions: mSessions
+            }));
+          }
+        });
+
+      }
+    });
+  }
+});
+
+app.get('/search/:name', (req, res) => {
+  if (!req.session.username) {
+    res.redirect("/");
+  } else if (req.session.userType != "Member") {
+    res.redirect("/AddSession");
+  } else {
+    console.log(req.params.name);
+    var sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+    JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
+    WHERE (firstName LIKE \'%'+req.params.name+'%\' OR lastName LIKE \'%'+req.params.name+'%\') AND WorkoutSession.sessionId NOT IN (SELECT sessionID FROM Takes WHERE memberID=?);';
+    mysql.pool.query(sql, [req.session.memberID], function (err, rows, fields) {
+      if (err) {
+        console.log(err);
+        res.status(500);
+        res.render('500');
+      } else {
+
+        sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+        JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
+        WHERE (firstName LIKE \'%'+ req.params.name + '%\' OR lastName LIKE \'%' + req.params.name +'%\') AND WorkoutSession.sessionId IN (SELECT sessionID FROM Takes WHERE memberID=?);';
+        mysql.pool.query(sql, [req.session.memberID], function (err, mSessions, fields) {
+          if (err) {
+            console.log(err);
+            res.status(500);
+            res.render('500');
+          } else {
+            res.status(200);
+            res.send(JSON.stringify({
+              data: rows,
+              memSessions: mSessions
+            }));
           }
         });
 

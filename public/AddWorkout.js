@@ -1,14 +1,83 @@
-console.log("addsessionJS Loaded");
+console.log("addWorkoutjs Loaded");
+var difficulty = ["Beginner", "Advanced", "Expert"];
 
 document.addEventListener("DOMContentLoaded", function(){
+    document.getElementById("search-btn").addEventListener("click", function(){
+        var text = document.getElementById("search-content").value;
+        // window.location.href = "/search/" + text;
+        // console.log(text);
+            var getRequest = new XMLHttpRequest();
+            var requestURL = "/search/"+text;
+            getRequest.open('GET', requestURL);
+
+            getRequest.addEventListener('load', function(event){
+                if (event.target.status === 200) {
+                    var body = JSON.parse(event.target.response);
+                    var enrolledSessions = body.memSessions;
+                    var otherSessions = body.data;
+                    console.log(body);
+                    var table = document.getElementsByClassName('search-results');
+                    table[0].innerHTML = "";
+                    table[1].innerHTML = "";
+
+                    console.log("Success");
+                    if(enrolledSessions.length > 0){
+                        console.log(enrolledSessions);
+                        var rows1 = "";
+                        for (var i = 0; i < enrolledSessions.length; i++) {
+                            rows1 += "<tr>";
+                            rows1 += "<td>" + enrolledSessions[i].firstName + " " + enrolledSessions[i].lastName + "</td>";
+                            rows1 += "<td>" +enrolledSessions[i].rating+ "</td>";
+                            rows1 += "<td>" +enrolledSessions[i].pName+ "</td>";
+                            rows1 += "<td>" +enrolledSessions[i].description+ "</td>";
+                            rows1 += "<td>" +difficulty[enrolledSessions[i].difficulty-1]+ "</td>";
+                            rows1 += "<td>" +enrolledSessions[i].sessDate+ "</td>";
+                            rows1 += "<td>" +enrolledSessions[i].duration+ "</td>";
+                            rows1 += "<td>Available</td>";
+                            rows1 += "</tr>";
+                        }
+                        table[0].innerHTML = rows1;
+                    } else {
+                        console.log("No results from query");
+                    }
+
+                    if (otherSessions.length > 0) {
+                        console.log(otherSessions);
+                        var rows1 = "";
+                        for (var i = 0; i < otherSessions.length; i++) {
+                            rows1 += "<tr>";
+                            rows1 += "<td>" + otherSessions[i].firstName + " " + otherSessions[i].lastName + "</td>";
+                            rows1 += "<td>" + otherSessions[i].rating + "</td>";
+                            rows1 += "<td>" + otherSessions[i].pName + "</td>";
+                            rows1 += "<td>" + otherSessions[i].description + "</td>";
+                            rows1 += "<td>" + difficulty[otherSessions[i].difficulty-1] + "</td>";
+                            rows1 += "<td>" + otherSessions[i].sessDate + "</td>";
+                            rows1 += "<td>" + otherSessions[i].duration + "</td>";
+                            rows1 += "<td>Available</td>";
+                            rows1 += "<td><input type=\"checkbox\" class=\"form-check-input\" id=\"" + otherSessions[i].sessionId + "\"></td>";
+                            rows1 += "</tr>";
+
+                        }
+                        table[1].innerHTML = rows1;
+                    } else {
+                        console.log("No results from query");
+                    }
+
+                } else {
+                    console.log(event.target.status);
+                    alert("Error getting data Sessions: " + event.target.response);
+                }
+            });
+
+            getRequest.setRequestHeader('Content-Type', 'application/json');
+            getRequest.send();
+    });
+
     document.getElementById("delete-all-btn").addEventListener("click", function () {
         console.log("Delete Everything");
         var deleteRequest = new XMLHttpRequest();
         var requestURL = "/deleteWorkouts";
         deleteRequest.open('DELETE', requestURL);
-        deleteRequest.setRequestHeader('Content-Type', 'text/plain');
-        deleteRequest.send();
-
         deleteRequest.addEventListener('load', function (event) {
             if (event.target.status === 200) {
                 console.log("Success");
@@ -18,6 +87,8 @@ document.addEventListener("DOMContentLoaded", function(){
                 alert("Error deleting Sessions: " + event.target.response);
             }
         });
+        deleteRequest.setRequestHeader('Content-Type', 'application/json');
+        deleteRequest.send();
     });
 
     document.getElementById("add-sessions-btn").addEventListener("click", function () {
@@ -52,54 +123,5 @@ document.addEventListener("DOMContentLoaded", function(){
         } else {
             console.log("There are no checkboxes checked");
         }
-
     });
 });
-// document.getElementById("newSessBtn").addEventListener("click", function(){
-//     var sessDate = document.getElementById("sessDate").value;
-//     var sessTime = document.getElementById("sessTime").value;
-//     var numOfParticipants = document.getElementById("numOfParticipants").value;
-//     var duration = document.getElementById("duration").value;
-//     var tid = document.getElementById("tid").value;
-//     var pName = document.getElementById("pName").value;
-
-//     var sessQuery = "INSERT INTO WorkoutSession (sessDate, numOfParticipants, sessTime, duration, tid, pName) VALUES ('" + sessDate + "','" + numOfParticipants + "','" + sessTime + "','" + duration + "','" + tid + "','" + pName + "')";
-  
-//     var postRequest = new XMLHttpRequest();
-//     var requestURL = "/addNewSession";
-//     postRequest.open('POST', requestURL);
-//     var requestBody = sessQuery;
-//     console.log(requestBody);
-//     postRequest.setRequestHeader('Content-Type', 'text/plain');
-//     postRequest.send(requestBody);
-    
-//     alert("Inserted new session")
-
-//     window.location.reload();
-// });
-
-
-
-// document.getElementById("upSessBtn").addEventListener("click", function(){
-//     var sessID = document.getElementById("sessionID").value;
-//     var sessDate = document.getElementById("sessDate2").value;
-//     var sessTime = document.getElementById("sessTime2").value;
-//     var numOfParticipants = document.getElementById("numOfParticipants2").value;
-//     var duration = document.getElementById("duration2").value;
-//     var tid = document.getElementById("tid").value;
-//     var pName = document.getElementById("pName2").value;
-
-//     var sessQuery = "UPDATE WorkoutSession SET sessDate=" + sessDate + ", numOfParticipants='" + numOfParticipants + "', sessTime='" + sessTime + "', duration='" + duration + "', pName='" + pName + "' WHERE sessionId='" + sessID + "'"
-  
-//     var postRequest = new XMLHttpRequest();
-//     var requestURL = "/addNewSession";
-//     postRequest.open('POST', requestURL);
-//     var requestBody = sessQuery;
-//     console.log(requestBody);
-//     postRequest.setRequestHeader('Content-Type', 'text/plain');
-//     postRequest.send(requestBody);
-    
-//     alert("Updated session")
-
-//     window.location.reload();
-// });

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/styles/AddWorkout.css"/>
-    <script type="text/javascript" src="AddWorkout.js"></script>
+    <script type="text/javascript" src="AddWorkout.js" defer></script>
 </head>
 <body>
 
@@ -19,6 +19,11 @@
         <a class="active" href="/AddWorkout">My Sessions</a>
         <a href="/Rate">Rate</a>
         <a href="/logout">Logout</a>
+        <!-- Search form -->
+        <div class="md-form mt-0">
+        <input id="search-content" class="form-control" type="text" placeholder="Search by trainer..." aria-label="Search">
+        <button class="btn btn-danger" id="search-btn">Search</button>
+        </div>
     </div>
 
     <div class="table-wrapper">
@@ -45,10 +50,9 @@
                     <th>Date&Time</th>
                     <th>Duration(Min)</th>
                     <th>Status</th>
-                    <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="search-results">
                 {{#each memSessions}}
                 <tr>
                     <td>{{this.firstName}} {{this.lastName}}</td>
@@ -106,7 +110,7 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="search-results">
                 {{#each data}}
                 <tr>
                     <td>{{this.firstName}} {{this.lastName}}</td>
