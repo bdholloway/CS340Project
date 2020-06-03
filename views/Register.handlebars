@@ -20,12 +20,15 @@
     <div class="signup-form">
         <form action="/register" method="POST">
             <h2>Register</h2>
+            {{#if expressFlash}}
+            <p>{{ expressFlash }}</p>
+            {{/if}}
             <div class="form-group">
                 <div class="row">
-                    <div class="col-xs-6"><input type="text" class="form-control" name="fname" placeholder="First Name"
-                            required="required"></div>
-                    <div class="col-xs-6"><input type="text" class="form-control" name="lname" placeholder="Last Name"
-                            required="required"></div>
+                    <div class="col-xs-6"><input type="text" class="form-control" name="fname"
+                            placeholder="First Name" required="required"></div>
+                    <div class="col-xs-6"><input type="text" class="form-control" name="lname"
+                            placeholder="Last Name" required="required"></div>
                 </div>
             </div>
             <div class="form-group">

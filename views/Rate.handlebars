@@ -18,7 +18,8 @@
     <div class="topnav">
         <a href="/Home">Home</a>
         <a href="/AddWorkout">Add Workout</a>
-        <a class="active" href="/Rate">Rate</a>
+        <a href="/Rate">Rate</a>
+        <a href="/logout">Logout</a>
     </div>
 
     <div class="table-wrapper">
@@ -26,13 +27,6 @@
             <div class="row">
                 <div class="col-sm-6">
                     <h2>Training Rating</h2>
-                </div>
-                <div class="col-sm-6">
-                    <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-success">
-                            <input type="radio" name="status" value="active"> Update
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>
@@ -47,6 +41,8 @@
             <tbody>
                 {{#each trainer}}
                 <tr>
+                    <td style="display:none"><input type="hidden" id="memberID" name="memberID" value={{memberID}}
+                            form="form{{trainerID}}"></td>
                     <td>{{firstName}} {{lastName}}</td>
                     <td>{{rating}}</td>
                     <td><select class="form-control" id="rateform" name="score" form="form{{trainerID}}">

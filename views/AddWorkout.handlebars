@@ -9,25 +9,89 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/styles/AddWorkout.css"/>
+    <script type="text/javascript" src="AddWorkout.js" defer></script>
 </head>
 <body>
 
     <!--Nav Menu-->
     <div class="topnav">
         <a href="/Home">Home</a>
-        <a class="active" href="/AddWorkout">Add Workout</a>
+        <a class="active" href="/AddWorkout">My Sessions</a>
         <a href="/Rate">Rate</a>
+        <a href="/logout">Logout</a>
+        <!-- Search form -->
+        <div class="md-form mt-0">
+        <input id="search-content" class="form-control" type="text" placeholder="Search by trainer..." aria-label="Search">
+        <button class="btn btn-danger" id="search-btn">Search</button>
+        </div>
     </div>
 
     <div class="table-wrapper">
         <div class="table-title">
             <div class="row">
-                <div class="col-sm-6"><h2>Add Workout Session</h2></div>
+                <div class="col-sm-6"><h2>My sessions</h2></div>
                 <div class="col-sm-6">
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-success">
-                            <input type="radio" name="status" value="active"> Confirm
+                            <input id="delete-all-btn" type="radio" name="status" value="active"> Delete All
                         </label>							
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Trainer</th>
+                    <th>Rating</th>
+                    <th>Workout</th>
+                    <th>Description</th>
+                    <th>Difficulty</th>
+                    <th>Date&Time</th>
+                    <th>Duration(Min)</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody class="search-results">
+                {{#each memSessions}}
+                <tr>
+                    <td>{{this.firstName}} {{this.lastName}}</td>
+                    <td>{{this.rating}}</td>
+                    <td>{{this.pName}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.difficulty}}</td>
+                    <td>{{this.sessDate}}</td>
+                    <td>{{this.duration}}</td>
+                    <td>Available</td>
+                    {{!-- <td><input type="checkbox" class="form-check-input" id={{this.sesssionId}}></td> --}}
+                </tr>
+                {{/each}}
+                {{!-- <tr>
+                    <td>Ted Hodges</td>
+                    <td>8</td>
+                    <td>Aerobics</td>
+                    <td>Aerobics</td>
+                    <td>Expert</td>
+                    <td>06/01/20 16:00</td>
+                    <td>45</td>
+                    <td>Full</td>
+                    <td><input type="checkbox" class="form-check-input" id="exampleCheck1"></td>
+                </tr> --}}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h2>Add Workout Session</h2>
+                </div>
+                <div class="col-sm-6">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-success">
+                            <input type="radio" id="add-sessions-btn" name="status" value="active"> Confirm
+                        </label>
                     </div>
                 </div>
             </div>
@@ -46,64 +110,23 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="search-results">
+                {{#each data}}
                 <tr>
-                    <td>Ted Hodges</td>
-                    <td>8</td>
-                    <td>Aerobics</td>
-                    <td>Aerobics</td>
-                    <td>Expert</td>
-                    <td>06/01/20 16:00</td>
-                    <td>45</td>
-                    <td>Full</td>
-                    <td><input type="checkbox" class="form-check-input" id="exampleCheck1"></td>
-                </tr>
-                <tr>
-                    <td>Michael Donner</td>
-                    <td>7</td>
-                    <td>Crossfit</td>
-                    <td>Cardio & Weights</td>
-                    <td>Advanced</td>
-                    <td>06/02/20 12:00</td>
-                    <td>60</td>
+                    <td>{{this.firstName}} {{this.lastName}}</td>
+                    <td>{{this.rating}}</td>
+                    <td>{{this.pName}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.difficulty}}</td>
+                    <td>{{this.sessDate}}</td>
+                    <td>{{this.duration}}</td>
                     <td>Available</td>
-                    <td><input type="checkbox" class="form-check-input" id="exampleCheck1"></td>
+                    <td><input type="checkbox" class="form-check-input" id="{{this.sessionId}}"></td>
                 </tr>
-                <tr>
-                    <td>Steven Boggs</td>
-                    <td>5</td>
-                    <td>Core</td>
-                    <td>Abs</td>
-                    <td>Beginner</td>
-                    <td>06/03/20 11:30</td>
-                    <td>30</td>
-                    <td>Available</td>
-                    <td><input type="checkbox" class="form-check-input" id="exampleCheck1"></td>
-                </tr>
-                <tr data-status="expired">
-                    <td>Bo Jackson</td>
-                    <td>10</td>
-                    <td>Legs</td>
-                    <td>Weights</td>
-                    <td>Expert</td>
-                    <td>06/05/20 15:00</td>
-                    <td>70</td>
-                    <td>Full</td>
-                    <td><input type="checkbox" class="form-check-input" id="exampleCheck1"></td>
-                </tr>
-                <tr data-status="inactive">
-                    <td>Chet Williams</td>
-                    <td>6</td>
-                    <td>Cardio</td>
-                    <td>Running</td>
-                    <td>intermediate</td>
-                    <td>06/06/20 13:00</td>
-                    <td>30</td>
-                    <td>Full</td>
-                    <td><input type="checkbox" class="form-check-input" id="exampleCheck1"></td>
-                </tr>
+                {{/each}}
             </tbody>
         </table>
-    </div>     
+    </div>
+
 </body>
 </html> 

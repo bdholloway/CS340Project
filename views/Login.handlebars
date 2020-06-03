@@ -8,9 +8,13 @@
 </head>
 
 <body>
+
   <div class="signup-form">
     <form action="/login" method="post">
       <h2>Login</h2>
+      {{#if expressFlash}}
+      <p>{{ expressFlash }}</p>
+      {{/if}}
       <div class="form-group">
         <input type="username" id="user" class="form-control" name="username" placeholder="Username"
           required="required">
@@ -31,6 +35,8 @@
       </div>
       <div class="text-center">Forget Password? <a href="/register">Register?</a></div>
     </form>
+  </div>
+  </form>
   </div>
 </body>
 
