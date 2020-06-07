@@ -3,7 +3,9 @@ body{
     background: #63738a !important;
 
 }
-
+th {
+    text-align: center;
+}
 p{
     text-align: center;
     padding-top: 25px;
