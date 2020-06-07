@@ -219,15 +219,18 @@ app.get('/AddWorkout', (req, res) => {
             var available = ["Available", "Full"];
             var difficulty = ["Beginner", "Advanced", "Expert"];
             console.log(mSessions.length);
-            for(var i = 0; i < mSessions.length; i++){
-              mSessions[i].difficulty = difficulty[mSessions[i].difficulty-1];
-              mSessions[i].Full = available[mSessions[i].Full];
-            }
-            for (var i = 0; i < rows.length; i++) {
-              rows[i].difficulty = difficulty[rows[i].difficulty - 1];
-              rows[i].Full = available[rows[i].Full];
-
-            }
+            for (var i = 0; i < mSessions.length; i++) {
+							mSessions[i].difficulty = difficulty[mSessions[i].difficulty - 1];
+							mSessions[i].Full = available[mSessions[i].Full];
+							var time = mSessions[i].sessDate.toString();
+							mSessions[i].sessDate = time.slice(4, 15);
+						}
+						for (var i = 0; i < rows.length; i++) {
+							rows[i].difficulty = difficulty[rows[i].difficulty - 1];
+							rows[i].Full = available[rows[i].Full];
+							var time = rows[i].sessDate.toString();
+							rows[i].sessDate = time.slice(4, 15);
+						}
             res.render('AddWorkout', { 
               data: rows,
               memSessions: mSessions
@@ -272,14 +275,17 @@ app.get('/search/', (req, res) => {
             var difficulty = ["Beginner", "Advanced", "Expert"];
             console.log(mSessions.length);
             for (var i = 0; i < mSessions.length; i++) {
-              mSessions[i].difficulty = difficulty[mSessions[i].difficulty - 1];
-              mSessions[i].Full = available[mSessions[i].Full];
-            }
-            for (var i = 0; i < rows.length; i++) {
-              rows[i].difficulty = difficulty[rows[i].difficulty - 1];
-              rows[i].Full = available[rows[i].Full];
-
-            }
+							mSessions[i].difficulty = difficulty[mSessions[i].difficulty - 1];
+							mSessions[i].Full = available[mSessions[i].Full];
+							var time = mSessions[i].sessDate.toString();
+							mSessions[i].sessDate = time.slice(4, 15);
+						}
+						for (var i = 0; i < rows.length; i++) {
+							rows[i].difficulty = difficulty[rows[i].difficulty - 1];
+							rows[i].Full = available[rows[i].Full];
+							var time = rows[i].sessDate.toString();
+							rows[i].sessDate = time.slice(4, 15);
+						}
             res.status(200);
             res.send(JSON.stringify({
               data: rows,
@@ -327,14 +333,17 @@ app.get('/search/:name', (req, res) => {
             var difficulty = ["Beginner", "Advanced", "Expert"];
             console.log(mSessions.length);
             for (var i = 0; i < mSessions.length; i++) {
-              mSessions[i].difficulty = difficulty[mSessions[i].difficulty - 1];
-              mSessions[i].Full = available[mSessions[i].Full];
-            }
-            for (var i = 0; i < rows.length; i++) {
-              rows[i].difficulty = difficulty[rows[i].difficulty - 1];
-              rows[i].Full = available[rows[i].Full];
-
-            }
+							mSessions[i].difficulty = difficulty[mSessions[i].difficulty - 1];
+							mSessions[i].Full = available[mSessions[i].Full];
+							var time = mSessions[i].sessDate.toString();
+							mSessions[i].sessDate = time.slice(4, 15);
+						}
+						for (var i = 0; i < rows.length; i++) {
+							rows[i].difficulty = difficulty[rows[i].difficulty - 1];
+							rows[i].Full = available[rows[i].Full];
+							var time = rows[i].sessDate.toString();
+							rows[i].sessDate = time.slice(4, 15);
+						}
             res.status(200);
             res.send(JSON.stringify({
               data: rows,
@@ -378,7 +387,10 @@ app.get('/AddSession', (req, res) => {
 
         console.log("planRes")
         console.log(planRes);
-
+        for (var i = 0; i < sessRes.length; i++) {
+					var time = sessRes[i].sessDate.toString();
+					sessRes[i].sessDate = time.slice(4, 15);
+				}
         res.render('AddSession', {
           sessRes: sessRes, 
           planRes: planRes,
