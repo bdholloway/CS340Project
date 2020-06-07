@@ -32,8 +32,10 @@ document.getElementById("upSessBtn").addEventListener("click", function(){
     var tid = document.getElementById("tid").value;
     var pName = document.getElementById("pName2").value;
 
-    var sessQuery = "UPDATE WorkoutSession SET sessDate=" + sessDate + ", numOfParticipants='" + numOfParticipants + "', sessTime='" + sessTime + "', duration='" + duration + "', pName='" + pName + "' WHERE sessionId='" + sessID + "'"
-  
+    var sessQuery = "UPDATE WorkoutSession SET sessDate='" + sessDate + "', numOfParticipants='" + numOfParticipants + "', sessTime='" + sessTime + "', duration='" + duration + "', pName='" + pName + "' WHERE sessionId='" + sessID + "'"
+    console.log("Update session")
+    console.log(sessQuery)
+
     var postRequest = new XMLHttpRequest();
     var requestURL = "/addNewSession";
     postRequest.open('POST', requestURL);
