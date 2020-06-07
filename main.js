@@ -194,7 +194,9 @@ app.get('/AddWorkout', (req, res) => {
   } else if (req.session.userType != "Member") {
     res.redirect("/AddSession");
   } else {
-    var sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+    var sql = 'SELECT *, (SELECT ((SELECT COUNT(*) FROM Takes WHERE Takes.sessionID=WorkoutSession.sessionId) >= \
+    (SELECT WorkoutSession.numOfParticipants))) AS Full\
+     FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
     JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
     WHERE WorkoutSession.sessionId NOT IN (SELECT sessionID FROM Takes WHERE memberID=?);';
     mysql.pool.query(sql, [req.session.memberID], function (err, rows, fields) {
@@ -204,7 +206,8 @@ app.get('/AddWorkout', (req, res) => {
         res.render('500');
       } else {
 
-        sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+        sql = 'SELECT *, (SELECT ((SELECT COUNT(*) FROM Takes WHERE Takes.sessionID=WorkoutSession.sessionId) >= (SELECT WorkoutSession.numOfParticipants))) AS Full\
+         FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
         JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
         WHERE WorkoutSession.sessionId IN (SELECT sessionID FROM Takes WHERE memberID=?);';
         mysql.pool.query(sql, [req.session.memberID], function(err, mSessions, fields){
@@ -213,13 +216,17 @@ app.get('/AddWorkout', (req, res) => {
             res.status(500);
             res.render('500');
           } else{
+            var available = ["Available", "Full"];
             var difficulty = ["Beginner", "Advanced", "Expert"];
             console.log(mSessions.length);
             for(var i = 0; i < mSessions.length; i++){
               mSessions[i].difficulty = difficulty[mSessions[i].difficulty-1];
+              mSessions[i].Full = available[mSessions[i].Full];
             }
             for (var i = 0; i < rows.length; i++) {
               rows[i].difficulty = difficulty[rows[i].difficulty - 1];
+              rows[i].Full = available[rows[i].Full];
+
             }
             res.render('AddWorkout', { 
               data: rows,
@@ -240,7 +247,8 @@ app.get('/search/', (req, res) => {
     res.redirect("/AddSession");
   } else {
     console.log(req.params.name);
-    var sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+    var sql = 'SELECT *, (SELECT ((SELECT COUNT(*) FROM Takes WHERE Takes.sessionID=WorkoutSession.sessionId) >= (SELECT WorkoutSession.numOfParticipants))) AS Full\
+     FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
     JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
     WHERE (firstName LIKE \'%%\' OR lastName LIKE \'%%\') AND WorkoutSession.sessionId NOT IN (SELECT sessionID FROM Takes WHERE memberID=?);';
     mysql.pool.query(sql, [req.session.memberID], function (err, rows, fields) {
@@ -250,7 +258,8 @@ app.get('/search/', (req, res) => {
         res.render('500');
       } else {
 
-        sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+        sql = 'SELECT *, (SELECT ((SELECT COUNT(*) FROM Takes WHERE Takes.sessionID=WorkoutSession.sessionId) >= (SELECT WorkoutSession.numOfParticipants))) AS Full\
+         FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
         JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
         WHERE (firstName LIKE \'%%\' OR lastName LIKE \'%%\') AND WorkoutSession.sessionId IN (SELECT sessionID FROM Takes WHERE memberID=?);';
         mysql.pool.query(sql, [req.session.memberID], function (err, mSessions, fields) {
@@ -259,6 +268,18 @@ app.get('/search/', (req, res) => {
             res.status(500);
             res.render('500');
           } else {
+            var available = ["Available", "Full"];
+            var difficulty = ["Beginner", "Advanced", "Expert"];
+            console.log(mSessions.length);
+            for (var i = 0; i < mSessions.length; i++) {
+              mSessions[i].difficulty = difficulty[mSessions[i].difficulty - 1];
+              mSessions[i].Full = available[mSessions[i].Full];
+            }
+            for (var i = 0; i < rows.length; i++) {
+              rows[i].difficulty = difficulty[rows[i].difficulty - 1];
+              rows[i].Full = available[rows[i].Full];
+
+            }
             res.status(200);
             res.send(JSON.stringify({
               data: rows,
@@ -279,7 +300,9 @@ app.get('/search/:name', (req, res) => {
     res.redirect("/AddSession");
   } else {
     console.log(req.params.name);
-    var sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+    var sql = 'SELECT *, (SELECT ((SELECT COUNT(*) FROM Takes WHERE Takes.sessionID=10) >= \
+    (SELECT WorkoutSession.numOfParticipants FROM WorkoutSession WHERE WorkoutSession.sessionId = 10))) AS Full\
+     FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
     JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
     WHERE (firstName LIKE \'%'+req.params.name+'%\' OR lastName LIKE \'%'+req.params.name+'%\') AND WorkoutSession.sessionId NOT IN (SELECT sessionID FROM Takes WHERE memberID=?);';
     mysql.pool.query(sql, [req.session.memberID], function (err, rows, fields) {
@@ -289,7 +312,9 @@ app.get('/search/:name', (req, res) => {
         res.render('500');
       } else {
 
-        sql = 'SELECT * FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+        sql = 'SELECT *, (SELECT ((SELECT COUNT(*) FROM Takes WHERE Takes.sessionID=10) >= \
+        (SELECT WorkoutSession.numOfParticipants FROM WorkoutSession WHERE WorkoutSession.sessionId = 10))) AS Full\
+         FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
         JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
         WHERE (firstName LIKE \'%'+ req.params.name + '%\' OR lastName LIKE \'%' + req.params.name +'%\') AND WorkoutSession.sessionId IN (SELECT sessionID FROM Takes WHERE memberID=?);';
         mysql.pool.query(sql, [req.session.memberID], function (err, mSessions, fields) {
@@ -298,6 +323,18 @@ app.get('/search/:name', (req, res) => {
             res.status(500);
             res.render('500');
           } else {
+            var available = ["Available", "Full"];
+            var difficulty = ["Beginner", "Advanced", "Expert"];
+            console.log(mSessions.length);
+            for (var i = 0; i < mSessions.length; i++) {
+              mSessions[i].difficulty = difficulty[mSessions[i].difficulty - 1];
+              mSessions[i].Full = available[mSessions[i].Full];
+            }
+            for (var i = 0; i < rows.length; i++) {
+              rows[i].difficulty = difficulty[rows[i].difficulty - 1];
+              rows[i].Full = available[rows[i].Full];
+
+            }
             res.status(200);
             res.send(JSON.stringify({
               data: rows,
@@ -378,8 +415,9 @@ app.post('/addNewWorkout', function (req, res) {
   console.log(sql);
   mysql.pool.query(sql, req.body.array, function (error, results, fields) {
     if(error){
-      console.log(error);
-      res.status(500).send("Error adding sessions");
+      console.log(JSON.stringify(error));
+      
+      res.status(500).send(JSON.stringify(error));
     } else {
       console.log("inserted workout session");
       res.status(200).send("Success");

@@ -15,8 +15,7 @@
 
     <!--Nav Menu-->
     <div class="topnav">
-        <a href="/Home">Home</a>
-        <a class="active" href="/AddWorkout">My Sessions</a>
+        <a class="active" href="/AddWorkout">Home</a>
         <a href="/Rate">Rate</a>
         <a href="/logout">Logout</a>
         <!-- Search form -->
@@ -62,7 +61,7 @@
                     <td>{{this.difficulty}}</td>
                     <td>{{this.sessDate}}</td>
                     <td>{{this.duration}}</td>
-                    <td>Available</td>
+                    <td>{{this.Full}}</td>
                     {{!-- <td><input type="checkbox" class="form-check-input" id={{this.sesssionId}}></td> --}}
                 </tr>
                 {{/each}}
@@ -107,7 +106,6 @@
                     <th>Date&Time</th>
                     <th>Duration(Min)</th>
                     <th>Status</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody class="search-results">
@@ -120,7 +118,7 @@
                     <td>{{this.difficulty}}</td>
                     <td>{{this.sessDate}}</td>
                     <td>{{this.duration}}</td>
-                    <td>Available</td>
+                    <td>{{this.Full}}</td>
                     <td><input type="checkbox" class="form-check-input" id="{{this.sessionId}}"></td>
                 </tr>
                 {{/each}}
