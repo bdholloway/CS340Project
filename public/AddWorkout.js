@@ -56,6 +56,9 @@ document.addEventListener("DOMContentLoaded", function(){
                 } else {
                     var message = JSON.parse(event.target.response);
                     console.log(message.sqlMessage);
+                    for (i = 0; i < sessionIDs.length; i++) {
+                        sessionIDs[i].checked = false;
+                    }
                     alert("Error adding Sessions: " + message.sqlMessage);
                 }
             });
@@ -96,7 +99,7 @@ function searchDB(){
                     rows1 += "<td>" + enrolledSessions[i].pName + "</td>";
                     rows1 += "<td>" + enrolledSessions[i].description + "</td>";
                     rows1 += "<td>" + enrolledSessions[i].difficulty + "</td>";
-                    rows1 += "<td>" + enrolledSessions[i].sessDate + "</td>";
+                    rows1 += "<td>" + enrolledSessions[i].sessDate + " " +enrolledSessions[i].sessTime +"</td>";
                     rows1 += "<td>" + enrolledSessions[i].duration + "</td>";
                     rows1 += "<td>" + enrolledSessions[i].Full+" </td>";
                     rows1 += "</tr>";
@@ -116,7 +119,7 @@ function searchDB(){
                     rows1 += "<td>" + otherSessions[i].pName + "</td>";
                     rows1 += "<td>" + otherSessions[i].description + "</td>";
                     rows1 += "<td>" + otherSessions[i].difficulty + "</td>";
-                    rows1 += "<td>" + otherSessions[i].sessDate + "</td>";
+                    rows1 += "<td>" + otherSessions[i].sessDate + " " + otherSessions[i].sessTime + "</td>";
                     rows1 += "<td>" + otherSessions[i].duration + "</td>";
                     rows1 += "<td>" + otherSessions[i].Full +" </td>";
                     rows1 += "<td><input type=\"checkbox\" class=\"form-check-input\" id=\"" + otherSessions[i].sessionId + "\"></td>";
