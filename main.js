@@ -306,9 +306,8 @@ app.get('/search/:name', (req, res) => {
     res.redirect("/AddSession");
   } else {
     console.log(req.params.name);
-    var sql = 'SELECT *, (SELECT ((SELECT COUNT(*) FROM Takes WHERE Takes.sessionID=10) >= \
-    (SELECT WorkoutSession.numOfParticipants FROM WorkoutSession WHERE WorkoutSession.sessionId = 10))) AS Full\
-     FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+    var sql = 'SELECT *, (SELECT ((SELECT COUNT(*) FROM Takes WHERE Takes.sessionID=WorkoutSession.sessionId) >= (SELECT WorkoutSession.numOfParticipants))) AS Full\
+    FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
     JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
     WHERE (firstName LIKE \'%'+req.params.name+'%\' OR lastName LIKE \'%'+req.params.name+'%\') AND WorkoutSession.sessionId NOT IN (SELECT sessionID FROM Takes WHERE memberID=?);';
     mysql.pool.query(sql, [req.session.memberID], function (err, rows, fields) {
@@ -318,9 +317,8 @@ app.get('/search/:name', (req, res) => {
         res.render('500');
       } else {
 
-        sql = 'SELECT *, (SELECT ((SELECT COUNT(*) FROM Takes WHERE Takes.sessionID=10) >= \
-        (SELECT WorkoutSession.numOfParticipants FROM WorkoutSession WHERE WorkoutSession.sessionId = 10))) AS Full\
-         FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
+        sql = 'SELECT *, (SELECT ((SELECT COUNT(*) FROM Takes WHERE Takes.sessionID=WorkoutSession.sessionId) >= (SELECT WorkoutSession.numOfParticipants))) AS Full\
+        FROM WorkoutSession JOIN Trainer ON WorkoutSession.tid = Trainer.trainerID \
         JOIN workoutPlan ON WorkoutSession.pName = workoutPlan.planName \
         WHERE (firstName LIKE \'%'+ req.params.name + '%\' OR lastName LIKE \'%' + req.params.name +'%\') AND WorkoutSession.sessionId IN (SELECT sessionID FROM Takes WHERE memberID=?);';
         mysql.pool.query(sql, [req.session.memberID], function (err, mSessions, fields) {
